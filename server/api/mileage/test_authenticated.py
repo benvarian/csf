@@ -185,35 +185,6 @@ class MileageTests(APITestCase):
         response = self.client.get(
             reverse("mileage:get-leaderboard"), {"type": "users"}, format="json"
         )
-        print(
-            response.data["leaderboard"],
-            [
-                {
-                    "username": USERNAME,
-                    "total_mileage": 100.0,
-                    "rank": 1,
-                    "team_id": None,
-                },
-                {
-                    "username": "user3",
-                    "total_mileage": 6.0,
-                    "rank": 2,
-                    "team_id": team2,
-                },
-                {
-                    "username": "user1",
-                    "total_mileage": 5.0,
-                    "rank": 3,
-                    "team_id": team1,
-                },
-                {
-                    "username": "user2",
-                    "total_mileage": 4.0,
-                    "rank": 4,
-                    "team_id": team1,
-                },
-            ],
-        )
         self.assertEquals(
             response.data["leaderboard"],
             [
@@ -251,12 +222,17 @@ class MileageTests(APITestCase):
         self.assertTrue("leaderboard" in response.data and "user" in response.data)
         self.assertEquals(
             response.data["user"],
-            {"username": "user1", "rank": 3, "total_mileage": 5.0, "team_id": team1.team_id},
+            {
+                "username": "user1",
+                "rank": 3,
+                "total_mileage": 5.0,
+                "team_id": team1.team_id,
+            },
         )
 
         # test the team leaderboard
         response = self.client.get(
-            reverse("mileage:get-leaderboard"), {"type": "team"}, format="json"
+            reverse("mileage:get-leaderboard"), {"type": "teams"}, format="json"
         )
         self.assertEquals(
             response.data["leaderboard"],
@@ -277,7 +253,7 @@ class MileageTests(APITestCase):
         )
         response = self.client.get(
             reverse("mileage:get-leaderboard"),
-            {"type": "team", "team_id": team2.team_id},
+            {"type": "teams", "team_id": team2.team_id},
             format="json",
         )
         self.assertTrue("leaderboard" in response.data and "team" in response.data)

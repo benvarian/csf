@@ -129,7 +129,7 @@ def get_leaderboard(request):
     elif request.GET["type"] == "team":
         leaderboard_serializer = UserLeaderboardSerializer(
             User.objects.filter(
-                is_staff=False, team_id=request.GET["team_id"]
+                is_staff=False, team_id=request.GET.get("team_id")
             ).order_by("-total_mileage"),
             many=True
         )
