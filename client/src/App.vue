@@ -12,7 +12,7 @@ import { RouterView } from 'vue-router'
     classes="csf-notification"
     position="bottom right"
     width="350px"
-    closeOnClick="True"
+    :closeOnClick="true"
   />
 </template>
 

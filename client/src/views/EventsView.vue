@@ -35,6 +35,7 @@
         :key="event.eventId"
         :event="event"
         @edit="openEditModal"
+        @view="viewEvent(event.eventId)"
         :background-colour="idx % 2 === 0 ? 'bg-primaryWhite' : 'bg-grey-lighten-4'"
       />
       <div v-if="filteredEventsList.length == 0" class="mt-6 mx-3 text-center">
@@ -72,6 +73,7 @@ import { useEventStore } from '../stores/event'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 import { notify } from '@kyvg/vue3-notification'
+import router from '../router'
 
 const eventStore = useEventStore()
 const { user } = storeToRefs(useUserStore())
@@ -114,6 +116,10 @@ function openEditModal(id: number) {
     editingEvent.value = foundEvent
     isEditingEvent.value = true
   }
+}
+
+const viewEvent = (id: Number) => {
+  router.push({ path: '/events/' + id })
 }
 </script>
 

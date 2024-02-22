@@ -44,6 +44,9 @@ export const useEventStore = defineStore('event', {
     async getEvents() {
       const { data, status } = await server.get('event/get/')
       if (status == 200) this.events = camelize(data as Snakify<Event>[])
+    },
+    getEventById(id: Number) {
+      return this.events.find((e) => e.eventId == id)
     }
   },
   getters: {}
