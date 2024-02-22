@@ -1,20 +1,9 @@
 <template>
-  <v-dialog
-    v-model="modalStore.isLogin"
-    :fullscreen="isFullscreen"
-    max-width="500px"
-    max-height="100vh"
-  >
+  <v-dialog v-model="modalStore.isLogin" :fullscreen="isFullscreen" max-width="500px" max-height="100vh">
     <v-card class="bg-backgroundGrey" align="center" justify="center">
       <div class="bg-backgroundGrey">
         <v-container class="pa-0">
-          <v-img
-            src="/images/Footer-min.jpeg"
-            width="100%"
-            height="10"
-            alt="red background"
-            cover
-          />
+          <v-img src="/images/Footer-min.jpeg" width="100%" height="10" alt="red background" cover />
         </v-container>
 
         <v-row justify="end">
@@ -44,46 +33,21 @@
         </v-col>
 
         <v-card-text class="pb-0 mb-0 mx-8">
-          <v-text-field
-            bg-color="#FFFFFF"
-            :rules="[required]"
-            :error-messages="errors.login"
-            @focus="errors.login = ''"
-            v-model="modalStore.username"
-            label="Username"
-            required
-          />
-          <v-text-field
-            bg-color="#FFFFFF"
-            :rules="[required]"
-            @focus="errors.login = ''"
-            v-model="modalStore.password"
-            label="Password"
-            type="password"
-            required
-          />
+          <v-text-field bg-color="#FFFFFF" :rules="[required]" :error-messages="errors.login" @focus="errors.login = ''"
+            v-model="modalStore.username" label="Username" required />
+          <v-text-field bg-color="#FFFFFF" :rules="[required]" @focus="errors.login = ''" v-model="modalStore.password"
+            label="Password" type="password" required />
         </v-card-text>
 
         <v-row align="center" justify="center" class="no-gutters">
-          <v-btn
-            class="pb-15 pt-6"
-            variant="plain"
-            color="secondaryBlue"
-            style="font-size: 12px"
-            @click="page = 2"
-            >Forgot Password?</v-btn
-          >
+          <v-btn class="pb-15 pt-6" variant="plain" color="secondaryBlue" style="font-size: 12px" @click="page = 2">Forgot
+            Password?</v-btn>
         </v-row>
         <v-card-actions class="justify-center">
           <v-col cols="auto" class="mt-10">
             <v-row align="center" justify="center">
               <v-btn variant="flat" class="bg-primaryRed" size="large" @click="submitForm">
-                <v-progress-circular
-                  v-if="loading"
-                  indeterminate
-                  size="24"
-                  color="white"
-                ></v-progress-circular>
+                <v-progress-circular v-if="loading" indeterminate size="24" color="white"></v-progress-circular>
                 <span v-else>Login</span>
               </v-btn>
             </v-row>
@@ -91,12 +55,7 @@
             <v-row align="center" justify="center" class="mt-4">
               <p>
                 or
-                <v-btn
-                  variant="plain"
-                  color="secondaryBlue"
-                  style="font-size: 12px"
-                  @click="modalStore.register"
-                >
+                <v-btn variant="plain" color="secondaryBlue" style="font-size: 12px" @click="modalStore.register">
                   Register
                 </v-btn>
               </p>
@@ -114,26 +73,12 @@
           </v-row>
         </v-col>
         <v-card-text>
-          <v-text-field
-            class="pb-0 mb-0"
-            bg-color="#FFFFFF"
-            v-model="form.email"
-            :rules="[required]"
-            @focus="errors.email = ''"
-            :error-messages="errors.email"
-            label="Email"
-            clearable
-            required
-          />
+          <v-text-field class="pb-0 mb-0" bg-color="#FFFFFF" v-model="form.email" :rules="[required]"
+            @focus="errors.email = ''" :error-messages="errors.email" label="Email" clearable required />
         </v-card-text>
         <v-card-actions class="justify-center mb-5">
           <v-btn variant="flat" class="bg-primaryRed" @click="emailUser">
-            <v-progress-circular
-              v-if="loading"
-              indeterminate
-              size="24"
-              color="white"
-            ></v-progress-circular>
+            <v-progress-circular v-if="loading" indeterminate size="24" color="white"></v-progress-circular>
             <span v-else>Send Email</span>
           </v-btn>
         </v-card-actions>
@@ -148,26 +93,13 @@
           </v-row>
         </v-col>
         <v-card-text>
-          <v-text-field
-            class="pb-0 mb-0"
-            bg-color="#FFFFFF"
-            :rules="[required]"
-            :error-messages="errors.token"
-            v-model="form.token"
-            label="Token"
-            clearable
-            required
-          />
+          <v-text-field class="pb-0 mb-0" bg-color="#FFFFFF" :rules="[required]" :error-messages="errors.token"
+            v-model="form.token" label="Token" clearable required />
         </v-card-text>
         <v-card-actions class="justify-center mb-5" align="center">
           <v-btn variant="text" class="mx-2" @click="emailUser">Resend Email</v-btn>
           <v-btn variant="flat" class="mx-2" rounded="lg" color="primaryRed" @click="submitToken">
-            <v-progress-circular
-              v-if="loading"
-              indeterminate
-              size="24"
-              color="white"
-            ></v-progress-circular>
+            <v-progress-circular v-if="loading" indeterminate size="24" color="white"></v-progress-circular>
             <span v-else>Submit</span>
           </v-btn>
         </v-card-actions>
@@ -179,47 +111,22 @@
           </v-row>
         </v-col>
         <v-card-text>
-          <v-text-field
-            class="pb-0 mb-0"
-            bg-color="#FFFFFF"
-            :rules="[required]"
-            :error-messages="errors.newPassword"
-            @focus="errors.newPassword = ''"
-            v-model="form.newPassword"
-            label="Password"
-            type="password"
-            clearable
-            required
-          />
-          <v-text-field
-            class="pb-0 mb-0"
-            bg-color="#FFFFFF"
-            :rules="[required]"
-            v-model="form.confirmPassword"
-            label="Confirm Password"
-            type="password"
-            clearable
-            required
-          />
+          <v-text-field class="pb-0 mb-0" bg-color="#FFFFFF" :rules="[required]" :error-messages="errors.newPassword"
+            @focus="errors.newPassword = ''" v-model="form.newPassword" label="Password" type="password" clearable
+            required />
+          <v-text-field class="pb-0 mb-0" bg-color="#FFFFFF" :rules="[required]" v-model="form.confirmPassword"
+            label="Confirm Password" type="password" clearable required />
         </v-card-text>
         <v-card-actions class="justify-center mb-5">
-          <v-btn
-            variant="flat"
-            class="mx-2"
-            rounded="lg"
-            color="primaryRed"
-            @click="submitNewPassword"
-            >Done</v-btn
-          >
+          <v-btn variant="flat" class="mx-2" rounded="lg" color="primaryRed" @click="submitNewPassword">Done</v-btn>
         </v-card-actions>
       </div>
       <div v-else class="bg-backgroundGrey">
         <v-col cols="auto">
           <v-row justify="center">
             <v-card-title class="text-center text-h4 pb-2 pt-5">Success!</v-card-title>
-            <v-card-subtitle class="text-center text-subtitle-1 pb-10"
-              >Your password was changed successfully</v-card-subtitle
-            >
+            <v-card-subtitle class="text-center text-subtitle-1 pb-10">Your password was changed
+              successfully</v-card-subtitle>
           </v-row>
         </v-col>
       </div>
@@ -228,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, watch } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { AxiosError } from 'axios'
 import { useModalStore } from '@/stores/modal'
@@ -239,6 +146,7 @@ const modalStore = useModalStore()
 const page = ref<1 | 2 | 3 | 4 | 5>(1)
 const isFullscreen = ref(false)
 const loading = ref(false)
+const user = ref(userStore.user);
 
 const form = ref({
   email: '',
@@ -360,6 +268,13 @@ async function submitNewPassword() {
     errors.value.newPassword = 'Passwords do not match'
   }
 }
+
+watch(user, (newUser, oldUser) => {
+  // if (newUser !== oldUser) {
+  //   user.value = newUser
+  // }
+  console.log('user', user.value, newUser);
+})
 
 watchEffect(async () => {
   const updateFullscreen = async () => {

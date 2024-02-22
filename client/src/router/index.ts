@@ -8,7 +8,7 @@ import DashboardView from '../views/DashboardView.vue'
 import ChallengeView from '../views/ChallengeView.vue'
 import LeaderboardView from '../views/LeaderboardView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
-import { capitalize } from 'vue'
+import { capitalize, ref, watch } from 'vue'
 import { useModalStore } from '@/stores/modal'
 
 const router = createRouter({
@@ -61,7 +61,6 @@ const router = createRouter({
 router.beforeEach(async (to, from) => {
   const userStore = useUserStore()
   const modalStore = useModalStore()
-
   if (to.path == '/team' || to.path == '/dashboard') {
     if (userStore.user == null) {
       modalStore.login()
@@ -69,6 +68,9 @@ router.beforeEach(async (to, from) => {
       return false
     }
   }
+  // watch(user, (newUser, oldUser) => {
+  //   console.log('user changed', newUser, oldUser);
+  // })
 })
 
 router.afterEach((to, from, failure) => {
