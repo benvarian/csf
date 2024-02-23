@@ -13,19 +13,20 @@
     <!-- Invite Code -->
     <v-row align="center" class="my-2">
       <v-col>
-        <h2>Joined or not</h2>
+        <h2 v-if="!isUserSignedUp">Sign Up</h2>
+        <h2 v-else>Joined</h2>
         <!-- <p class="invite-code">{{ teamData.invite_code }}</p> -->
       </v-col>
       <v-tooltip location="end">
         <template v-slot:activator="{ props }">
-          <v-icon
-            @click="copyInviteCode"
-            v-bind="props"
-            class="mdi mdi-clipboard-multiple-outline px-10"
-            size="32px"
-          />
+          <!-- if the user is signed up to event have different logo -->
+          <v-icon @click="copyInviteCode" v-bind="props" :class="{
+            'mdi mdi-account-plus-outline px-10':
+              !isUserSignedUp, 'mdi mdi-account-check-outline px-10': isUserSignedUp
+          }" size="32px" />
         </template>
-        <!-- <span>{{ copyHoverText }}</span> -->
+        <span v-if="!isUserSignedUp">Join Event</span>
+        <span v-else>Already Signed Up</span>
       </v-tooltip>
     </v-row>
     <v-divider />
@@ -34,22 +35,11 @@
     <v-container class="pa-0">
       <v-row id="pointer-cursor" class="my-2">
         <v-col @click="isDescVisible = !isDescVisible">
-          <h2>Bio</h2>
+          <h2>Description</h2>
         </v-col>
-        <v-icon
-          v-if="isDescVisible"
-          icon="mdi mdi-chevron-down"
-          @click="isDescVisible = !isDescVisible"
-          class="px-10"
-          size="50px"
-        />
-        <v-icon
-          v-else
-          icon="mdi mdi-chevron-right"
-          @click="isDescVisible = !isDescVisible"
-          class="px-10"
-          size="50px"
-        />
+        <v-icon v-if="isDescVisible" icon="mdi mdi-chevron-down" @click="isDescVisible = !isDescVisible" class="px-10"
+          size="50px" />
+        <v-icon v-else icon="mdi mdi-chevron-right" @click="isDescVisible = !isDescVisible" class="px-10" size="50px" />
       </v-row>
       <v-row v-if="isDescVisible" class="mt-n4 mb-2">
         <v-col>
@@ -65,20 +55,10 @@
         <v-col @click="isDailyKmsVisible = !isDailyKmsVisible">
           <h2>Daily KMs</h2>
         </v-col>
-        <v-icon
-          v-if="isDailyKmsVisible"
-          @click="isDailyKmsVisible = !isDailyKmsVisible"
-          icon="mdi mdi-chevron-down"
-          size="50px"
-          class="px-10"
-        />
-        <v-icon
-          v-else
-          @click="isDailyKmsVisible = !isDailyKmsVisible"
-          icon="mdi mdi-chevron-right"
-          size="50px"
-          class="px-10"
-        />
+        <v-icon v-if="isDailyKmsVisible" @click="isDailyKmsVisible = !isDailyKmsVisible" icon="mdi mdi-chevron-down"
+          size="50px" class="px-10" />
+        <v-icon v-else @click="isDailyKmsVisible = !isDailyKmsVisible" icon="mdi mdi-chevron-right" size="50px"
+          class="px-10" />
       </v-row>
       <v-row v-if="isDailyKmsVisible" class="mt-n4 mb-2">
         <v-col>
@@ -92,12 +72,7 @@
 
     <!-- Leaderboard -->
     <v-container class="pa-0">
-      <v-row
-        align="start"
-        @click="isLeaderboardVisible = !isLeaderboardVisible"
-        id="pointer-cursor"
-        class="my-2"
-      >
+      <v-row align="start" @click="isLeaderboardVisible = !isLeaderboardVisible" id="pointer-cursor" class="my-2">
         <v-col>
           <h2>Leaderboard</h2>
         </v-col>
@@ -139,16 +114,20 @@
 
 <script setup lang="ts">
 import { useEventStore } from '@/stores/event'
+import { useUserStore } from '@/stores/user'
 import { onMounted, ref } from 'vue'
 import type { Event } from '@/types/event'
+import type { UsersEvents } from '@/types/user'
 import router from '@/router'
 import { useDisplay } from 'vuetify'
 const { mobile } = useDisplay()
 
-const eventStore = useEventStore()
+const eventStore = useEventStore();
+const userStore = useUserStore();
 const isDescVisible = ref(false)
 const isDailyKmsVisible = ref(false)
 const isLeaderboardVisible = ref(false)
+const isUserSignedUp = ref(false);
 
 const event = ref<Event>()
 onMounted(async () => {
@@ -156,5 +135,19 @@ onMounted(async () => {
     await eventStore.getEvents()
   }
   event.value = eventStore.getEventById(Number(router.currentRoute.value.params.id))
+  checkIfUserIsSignedUp();
+
 })
+
+const checkIfUserIsSignedUp = () => {
+  if (userStore.user?.events === null) return;
+  for (const [key, value] of Object.entries(userStore.user?.events as UsersEvents)) {
+    console.log(value);
+
+    if (event.value?.eventId === value) {
+      isUserSignedUp.value = true;
+    }
+
+  }
+}
 </script>

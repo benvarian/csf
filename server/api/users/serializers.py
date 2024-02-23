@@ -101,11 +101,3 @@ class PublicUserSerializer(ModelSerializer):
             "team_admin",
             "challenge_start_date"
         ]
-
-# class AddEventToUserSerializer(ModelSerializer):
-#     class Meta:
-#         model = get_user_model()
-#         fields = [
-#             "event_id",
-#             "event_name"
-#         ]

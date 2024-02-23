@@ -11,13 +11,13 @@ class UserManager(BaseUserManager):
         if not username:
             raise ValueError("Users must have a username.")
 
-        if 'email' in extra_fields:
-            self.normalize_email(extra_fields['email'])
+        if "email" in extra_fields:
+            self.normalize_email(extra_fields["email"])
         # Check if username already exists
         if self.filter(username=username).exists():
             raise ValueError("Username already exists.")
 
-        email = extra_fields.get('email')
+        email = extra_fields.get("email")
         if email and self.filter(email=email).exists():
             raise ValueError("Email already exists.")
 
@@ -55,22 +55,40 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     team_signup = models.BooleanField(default=False)  # boolean
     has_consent = models.BooleanField(default=False)  # boolean
-    travel_method = models.CharField(max_length=100, blank=True, choices=[('RUNNING', 'RUNNING'), ('WHEELING', 'WHEELING'), ('WALKING', 'WALKING')])
-    avatar = models.CharField(max_length=100, default="avatar1.jpg", choices=[(
-        'avatar1.jpg', 'avatar 1'), ('avatar2.jpg', 'avatar 2'), ('avatar3.jpg', 'avatar 3'), ('avatar4.jpg', 'avatar 4'),
-        ('avatar5.jpg', 'avatar 5'), ('avatar6.jpg', 'avatar 6')])
-    subteam_id = models.ForeignKey(SubTeam, null=True, on_delete=models.SET_NULL, blank=True)
+    travel_method = models.CharField(
+        max_length=100,
+        blank=True,
+        choices=[
+            ("RUNNING", "RUNNING"),
+            ("WHEELING", "WHEELING"),
+            ("WALKING", "WALKING"),
+        ],
+    )
+    avatar = models.CharField(
+        max_length=100,
+        default="avatar1.jpg",
+        choices=[
+            ("avatar1.jpg", "avatar 1"),
+            ("avatar2.jpg", "avatar 2"),
+            ("avatar3.jpg", "avatar 3"),
+            ("avatar4.jpg", "avatar 4"),
+            ("avatar5.jpg", "avatar 5"),
+            ("avatar6.jpg", "avatar 6"),
+        ],
+    )
+    subteam_id = models.ForeignKey(
+        SubTeam, null=True, on_delete=models.SET_NULL, blank=True
+    )
     team_id = models.ForeignKey(Team, null=True, on_delete=models.SET_NULL, blank=True)
     team_admin = models.BooleanField(default=False)
     reset_token = models.CharField(max_length=36, blank=True)
     reset_time = models.DateTimeField(null=True, blank=True)
     challenge_start_date = models.DateField(null=True, blank=True)
     total_mileage = models.FloatField(default=0.0, null=True, blank=True)
-    # events = models.JSONField(null=True, blank=True)
 
     objects = UserManager()
 
-    REQUIRED_FIELDS = ['password', 'email']
+    REQUIRED_FIELDS = ["password", "email"]
 
     def __str__(self):
         return self.username
