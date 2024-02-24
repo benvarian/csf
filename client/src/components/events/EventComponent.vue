@@ -20,10 +20,15 @@
       <v-tooltip location="end">
         <template v-slot:activator="{ props }">
           <!-- if the user is signed up to event have different logo -->
-          <v-icon @click="copyInviteCode" v-bind="props" :class="{
-            'mdi mdi-account-plus-outline px-10':
-              !isUserSignedUp, 'mdi mdi-account-check-outline px-10': isUserSignedUp
-          }" size="32px" />
+          <v-icon
+            @click="copyInviteCode"
+            v-bind="props"
+            :class="{
+              'mdi mdi-account-plus-outline px-10': !isUserSignedUp,
+              'mdi mdi-account-check-outline px-10': isUserSignedUp
+            }"
+            size="32px"
+          />
         </template>
         <span v-if="!isUserSignedUp">Join Event</span>
         <span v-else>Already Signed Up</span>
@@ -37,9 +42,20 @@
         <v-col @click="isDescVisible = !isDescVisible">
           <h2>Description</h2>
         </v-col>
-        <v-icon v-if="isDescVisible" icon="mdi mdi-chevron-down" @click="isDescVisible = !isDescVisible" class="px-10"
-          size="50px" />
-        <v-icon v-else icon="mdi mdi-chevron-right" @click="isDescVisible = !isDescVisible" class="px-10" size="50px" />
+        <v-icon
+          v-if="isDescVisible"
+          icon="mdi mdi-chevron-down"
+          @click="isDescVisible = !isDescVisible"
+          class="px-10"
+          size="50px"
+        />
+        <v-icon
+          v-else
+          icon="mdi mdi-chevron-right"
+          @click="isDescVisible = !isDescVisible"
+          class="px-10"
+          size="50px"
+        />
       </v-row>
       <v-row v-if="isDescVisible" class="mt-n4 mb-2">
         <v-col>
@@ -55,10 +71,20 @@
         <v-col @click="isDailyKmsVisible = !isDailyKmsVisible">
           <h2>Daily KMs</h2>
         </v-col>
-        <v-icon v-if="isDailyKmsVisible" @click="isDailyKmsVisible = !isDailyKmsVisible" icon="mdi mdi-chevron-down"
-          size="50px" class="px-10" />
-        <v-icon v-else @click="isDailyKmsVisible = !isDailyKmsVisible" icon="mdi mdi-chevron-right" size="50px"
-          class="px-10" />
+        <v-icon
+          v-if="isDailyKmsVisible"
+          @click="isDailyKmsVisible = !isDailyKmsVisible"
+          icon="mdi mdi-chevron-down"
+          size="50px"
+          class="px-10"
+        />
+        <v-icon
+          v-else
+          @click="isDailyKmsVisible = !isDailyKmsVisible"
+          icon="mdi mdi-chevron-right"
+          size="50px"
+          class="px-10"
+        />
       </v-row>
       <v-row v-if="isDailyKmsVisible" class="mt-n4 mb-2">
         <v-col>
@@ -72,7 +98,12 @@
 
     <!-- Leaderboard -->
     <v-container class="pa-0">
-      <v-row align="start" @click="isLeaderboardVisible = !isLeaderboardVisible" id="pointer-cursor" class="my-2">
+      <v-row
+        align="start"
+        @click="isLeaderboardVisible = !isLeaderboardVisible"
+        id="pointer-cursor"
+        class="my-2"
+      >
         <v-col>
           <h2>Leaderboard</h2>
         </v-col>
@@ -122,12 +153,12 @@ import router from '@/router'
 import { useDisplay } from 'vuetify'
 const { mobile } = useDisplay()
 
-const eventStore = useEventStore();
-const userStore = useUserStore();
+const eventStore = useEventStore()
+const userStore = useUserStore()
 const isDescVisible = ref(false)
 const isDailyKmsVisible = ref(false)
 const isLeaderboardVisible = ref(false)
-const isUserSignedUp = ref(false);
+const isUserSignedUp = ref(false)
 
 const event = ref<Event>()
 onMounted(async () => {
@@ -135,19 +166,17 @@ onMounted(async () => {
     await eventStore.getEvents()
   }
   event.value = eventStore.getEventById(Number(router.currentRoute.value.params.id))
-  checkIfUserIsSignedUp();
-
+  checkIfUserIsSignedUp()
 })
 
 const checkIfUserIsSignedUp = () => {
-  if (userStore.user?.events === null) return;
+  if (userStore.user?.events === null) return
   for (const [key, value] of Object.entries(userStore.user?.events as UsersEvents)) {
-    console.log(value);
+    console.log(value)
 
     if (event.value?.eventId === value) {
-      isUserSignedUp.value = true;
+      isUserSignedUp.value = true
     }
-
   }
 }
 </script>
