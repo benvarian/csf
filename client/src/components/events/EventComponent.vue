@@ -15,24 +15,25 @@
       <v-col>
         <h2 v-if="!isUserSignedUp">Sign Up</h2>
         <h2 v-else>Joined</h2>
-        <!-- <p class="invite-code">{{ teamData.invite_code }}</p> -->
       </v-col>
       <v-tooltip location="end">
         <template v-slot:activator="{ props }">
-          <!-- if the user is signed up to event have different logo -->
-          <!-- todo change to v-if so we dont have to differentiate in the function-->
           <v-icon
-            @click="copyInviteCode"
+            v-if="isUserSignedUp"
             v-bind="props"
-            :class="{
-              'mdi mdi-account-plus-outline px-10': !isUserSignedUp,
-              'mdi mdi-account-check-outline px-10': isUserSignedUp
-            }"
+            class="mdi mdi-account-check-outline px-10"
+            size="32px"
+          />
+          <v-icon
+            v-if="!isUserSignedUp"
+            @click="signUpEvent"
+            v-bind="props"
+            class="mdi mdi-account-plus-outline px-10"
             size="32px"
           />
         </template>
         <span v-if="!isUserSignedUp">Join Event</span>
-        <span v-else>Already Signed Up</span>
+        <span v-if="isUserSignedUp">Already Signed Up</span>
       </v-tooltip>
     </v-row>
     <v-divider />
@@ -167,6 +168,10 @@ onMounted(async () => {
   }
   event.value = eventStore.getEventById(Number(router.currentRoute.value.params.id))
 })
+
+const signUpEvent = () => {
+  isUserSignedUp.value = true
+}
 
 const copyInviteCode = () => {}
 </script>
