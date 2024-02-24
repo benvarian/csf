@@ -20,6 +20,7 @@
       <v-tooltip location="end">
         <template v-slot:activator="{ props }">
           <!-- if the user is signed up to event have different logo -->
+          <!-- todo change to v-if so we dont have to differentiate in the function-->
           <v-icon
             @click="copyInviteCode"
             v-bind="props"
@@ -179,4 +180,6 @@ const checkIfUserIsSignedUp = () => {
     }
   }
 }
+
+const copyInviteCode = () => {}
 </script>
