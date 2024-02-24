@@ -149,7 +149,6 @@ import { useEventStore } from '@/stores/event'
 import { useUserStore } from '@/stores/user'
 import { onMounted, ref } from 'vue'
 import type { Event } from '@/types/event'
-import type { UsersEvents } from '@/types/user'
 import router from '@/router'
 import { useDisplay } from 'vuetify'
 const { mobile } = useDisplay()
@@ -167,19 +166,7 @@ onMounted(async () => {
     await eventStore.getEvents()
   }
   event.value = eventStore.getEventById(Number(router.currentRoute.value.params.id))
-  checkIfUserIsSignedUp()
 })
-
-const checkIfUserIsSignedUp = () => {
-  if (userStore.user?.events === null) return
-  for (const [key, value] of Object.entries(userStore.user?.events as UsersEvents)) {
-    console.log(value)
-
-    if (event.value?.eventId === value) {
-      isUserSignedUp.value = true
-    }
-  }
-}
 
 const copyInviteCode = () => {}
 </script>
