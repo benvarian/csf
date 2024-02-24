@@ -11,5 +11,4 @@ urlpatterns = [
     path("get/", views.get_user, name="get-user"),
     path("join/<int:id>/", views.join_team, name="join-team"),
     path("remove/<int:id>/", views.remove_team, name="remove-team"),
-
 ]

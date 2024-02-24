@@ -8,6 +8,7 @@ import DashboardView from '../views/DashboardView.vue'
 import ChallengeView from '../views/ChallengeView.vue'
 import LeaderboardView from '../views/LeaderboardView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
+import EventComponent from '@/components/events/EventComponent.vue'
 import { capitalize } from 'vue'
 import { useModalStore } from '@/stores/modal'
 
@@ -28,6 +29,11 @@ const router = createRouter({
       path: '/events',
       name: 'events',
       component: EventsView
+    },
+    {
+      path: '/events/:id',
+      name: 'event',
+      component: EventComponent
     },
     {
       path: '/settings',

@@ -1248,10 +1248,10 @@
   resolved "https://registry.yarnpkg.com/@kurkle/color/-/color-0.3.2.tgz#5acd38242e8bde4f9986e7913c8fdf49d3aa199f"
   integrity sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==
 
-"@kyvg/vue3-notification@^2.9.1":
-  version "2.9.1"
-  resolved "https://registry.yarnpkg.com/@kyvg/vue3-notification/-/vue3-notification-2.9.1.tgz#6c74e5c1723ead8a0a42f00d81c2b3a13eee2f96"
-  integrity sha512-FsY8g25tQetr3etnarxHtCeNFKssH8sheFu13LyL2JJmOOel437QqKV5n4RBDDDTIo55iKgIVYXeojliXYdEhw==
+"@kyvg/vue3-notification@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@kyvg/vue3-notification/-/vue3-notification-3.2.0.tgz#a4b2ba7dcec842d9fac4b5a8b224b2b22062bb46"
+  integrity sha512-DKicfzxS6n7oMCkFoUqzb26Orjv8Oo3fhOgSDYM2I1mGDwBW+Tyb/yr2eauho0R+E5chNswZ3AUyAE9DqutXmg==
 
 "@nicolo-ribaudo/semver-v6@^6.3.3":
   version "6.3.3"
