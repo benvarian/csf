@@ -11,7 +11,6 @@ export interface User {
   subteamId?: number
   teamId?: number
   teamAdmin?: boolean
-  events?: UsersEvents
 }
 
 export interface Signup {
@@ -51,8 +50,4 @@ export interface ChangePasswordError {
 export interface Tokens {
   access: string
   refresh: string
-}
-
-export interface UsersEvents {
-  eventId: Number
 }

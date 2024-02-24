@@ -169,7 +169,3 @@ def remove_team(request, id):
         return Response(user_serializer.data)
     else:
         return Response(user_serializer.errors, status=400)
-
-
-# @api_view(['POST'])
-# def add_event(request):
