@@ -3,6 +3,7 @@ export default interface Mileage {
   user: number
   kilometres: number
   date: string
+  event: number
 }
 
 export interface GetLeaderboardParam {

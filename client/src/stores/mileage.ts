@@ -20,7 +20,7 @@ export const useMileageStore = defineStore('mileage', {
     totalKmByTeam: (state) => state.byTeam.totalKm
   },
   actions: {
-    addMileage(mileage: Omit<Mileage, 'mileageId'>) {
+    async addMileage(mileage: Omit<Mileage, 'mileageId'>) {
       return server
         .post('mileage/post_mileage', mileage)
         .then(async () => {
@@ -73,6 +73,6 @@ export const useMileageStore = defineStore('mileage', {
       })
       if (res.status == 200) this.totalChallengeKmByUser = res.data
     },
-    async getMileageByEvent() {},
+    async getMileageByEvent() {}
   }
 })

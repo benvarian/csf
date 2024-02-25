@@ -35,7 +35,7 @@
                   color="primaryRed"
                   @click="dialog = true"
                 />
-                <MileageModal v-model="dialog" @handle-submit="updateChallengeProgress(true)" />
+                <MileageModal v-model="dialog" />
               </v-col>
             </v-row>
           </v-container>
@@ -241,7 +241,9 @@ const getIconName = (medium: any) => {
   }
 }
 
-const updateMileage = async () => {}
+// const updateMileage = async () => {
+
+// }
 // async function updateChallengeProgress(checkForCompletion: boolean) {
 //   const oldDistance = mileageStore.totalChallengeKmByUser
 //   await mileageStore.getChallengeMileage()
