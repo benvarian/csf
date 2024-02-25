@@ -72,6 +72,7 @@ export const useMileageStore = defineStore('mileage', {
         params: { challenge: true, user: useUserStore().user!.id }
       })
       if (res.status == 200) this.totalChallengeKmByUser = res.data
-    }
+    },
+    async getMileageByEvent() {},
   }
 })
