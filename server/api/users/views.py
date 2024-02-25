@@ -15,6 +15,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth.hashers import check_password
 
 from ..team.models import Team
+from ..event.models import Event
 
 
 import uuid
@@ -169,3 +170,22 @@ def remove_team(request, id):
         return Response(user_serializer.data)
     else:
         return Response(user_serializer.errors, status=400)
+
+
+@api_view(["POST"])
+def add_event(request):
+    try:
+        user = User.objects.get(id=request.user.id)
+    except User.DoesNotExist:
+        return Response(status=404)
+    try:
+        event = Event.objects.get(event_id=request.data["event"])
+    except Event.DoesNotExist:
+        return Response(status=404)
+    except KeyError:
+        return Response(status=400)
+    try:
+        user.users_events.add(event)
+    except KeyError:
+        return Response(status=400)
+    return Response(status=200)

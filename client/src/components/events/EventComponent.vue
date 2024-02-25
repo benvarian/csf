@@ -167,10 +167,23 @@ onMounted(async () => {
     await eventStore.getEvents()
   }
   event.value = eventStore.getEventById(Number(router.currentRoute.value.params.id))
+  checkUserEvent()
 })
 
-const signUpEvent = () => {
+const signUpEvent = async () => {
+  try {
+    await userStore.addEvent(event.value?.eventId as number)
+  } catch (error) {
+    console.log(error)
+  }
   isUserSignedUp.value = true
+}
+
+const checkUserEvent = () => {
+  if (userStore.user?.usersEvents) {
+    if (userStore.user?.usersEvents.includes(event.value?.eventId as number))
+      isUserSignedUp.value = true
+  }
 }
 
 const copyInviteCode = () => {}

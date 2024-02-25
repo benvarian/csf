@@ -11,6 +11,7 @@ export interface User {
   subteamId?: number
   teamId?: number
   teamAdmin?: boolean
+  usersEvents: number[]
 }
 
 export interface Signup {

@@ -99,5 +99,6 @@ class PublicUserSerializer(ModelSerializer):
             "team_id",
             "subteam_id",
             "team_admin",
-            "challenge_start_date"
+            "challenge_start_date",
+            "users_events"
         ]

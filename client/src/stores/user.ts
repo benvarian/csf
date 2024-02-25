@@ -121,6 +121,14 @@ export const useUserStore = defineStore('user', {
         useModalStore().login()
       }
       return false
+    },
+    async addEvent(eventId: number) {
+      const data = {
+        event: eventId
+      }
+      const { status } = await server.post('user/add/', snakify(data))
+
+      if (status == 200) await this.getUser()
     }
   }
 })

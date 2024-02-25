@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from api.team.models import Team
 from api.subteam.models import SubTeam
+from ..event.models import Event
 
 
 class UserManager(BaseUserManager):
@@ -85,6 +86,7 @@ class User(AbstractUser):
     reset_time = models.DateTimeField(null=True, blank=True)
     challenge_start_date = models.DateField(null=True, blank=True)
     total_mileage = models.FloatField(default=0.0, null=True, blank=True)
+    users_events = models.ManyToManyField(Event, blank=True)
 
     objects = UserManager()
 
