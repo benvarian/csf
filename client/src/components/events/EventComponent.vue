@@ -9,6 +9,41 @@
     </v-row>
 
     <v-divider />
+    <!-- change the mileageStore thing to the events mileage -->
+    <v-row class="ma-0 px-4 pb-0 pt-0" align="center">
+      <v-col>
+        <v-card variant="flat" class="pb-1">
+          <v-container class="pa-0" fluid>
+            <v-row class="ma-0">
+              <v-row align="center" class="my-1">
+                <v-icon :class="['mdi', 'ml-2', method]" size="52" color="#2c3d4f" />
+                <v-col class="pb-0">
+                  <v-chip color="green" class="rounded text-h5"
+                    >{{ Math.round((event?.totalMileage as number) * 100) / 100 }} KM</v-chip
+                  >
+                  <h3>TOTAL</h3>
+                </v-col>
+              </v-row>
+
+              <v-spacer />
+              <v-col cols="auto">
+                <v-btn
+                  variant="elevated"
+                  elevated="2"
+                  :ripple="true"
+                  icon="mdi-plus"
+                  color="primaryRed"
+                  @click="dialog = true"
+                />
+                <MileageModal v-model="dialog" @handle-submit="updateChallengeProgress(true)" />
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <v-divider />
 
     <!-- Invite Code -->
     <v-row align="center" class="my-2">
@@ -148,18 +183,23 @@
 <script setup lang="ts">
 import { useEventStore } from '@/stores/event'
 import { useUserStore } from '@/stores/user'
+import { useMileageStore } from '@/stores/mileage'
 import { onMounted, ref } from 'vue'
 import type { Event } from '@/types/event'
 import router from '@/router'
 import { useDisplay } from 'vuetify'
+import MileageModal from '../MileageModal.vue'
 const { mobile } = useDisplay()
 
 const eventStore = useEventStore()
 const userStore = useUserStore()
-const isDescVisible = ref(false)
+const isDescVisible = ref(true)
 const isDailyKmsVisible = ref(false)
 const isLeaderboardVisible = ref(false)
 const isUserSignedUp = ref(false)
+const method = ref()
+const mileageStore = useMileageStore()
+const dialog = ref(false)
 
 const event = ref<Event>()
 onMounted(async () => {
@@ -168,6 +208,7 @@ onMounted(async () => {
   }
   event.value = eventStore.getEventById(Number(router.currentRoute.value.params.id))
   checkUserEvent()
+  getIconName(userStore.user?.travelMethod)
 })
 
 const signUpEvent = async () => {
@@ -185,6 +226,38 @@ const checkUserEvent = () => {
       isUserSignedUp.value = true
   }
 }
+
+const getIconName = (medium: any) => {
+  switch (medium) {
+    case 'RUNNING':
+      method.value = 'mdi-run-fast'
+      break
+    case 'WHEELING':
+      method.value = 'mdi-wheelchair-accessibility'
+      break
+    case 'WALKING':
+      method.value = 'mdi-walk'
+      break
+  }
+}
+
+const updateMileage = async () => {}
+// async function updateChallengeProgress(checkForCompletion: boolean) {
+//   const oldDistance = mileageStore.totalChallengeKmByUser
+//   await mileageStore.getChallengeMileage()
+
+//   if (checkForCompletion) {
+//     challenges.value.forEach((challenge) => {
+//       if (
+//         oldDistance < challenge.length &&
+//         mileageStore.totalChallengeKmByUser >= challenge.length
+//       ) {
+//         challengeName.value = challenge.name
+//         isCompleted.value = true
+//       }
+//     })
+//   }
+// }
 
 const copyInviteCode = () => {}
 </script>

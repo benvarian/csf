@@ -7,6 +7,7 @@ export interface Event {
   isPublic: boolean
   isArchived: boolean
   teamId: number | null
+  totalMileage: number
 }
 
 export interface EventError {
