@@ -35,7 +35,7 @@
                   color="primaryRed"
                   @click="dialog = true"
                 />
-                <MileageModal v-model="dialog" />
+                <MileageModal v-model="dialog" @handle-submit="updateEvent" />
               </v-col>
             </v-row>
           </v-container>
@@ -206,7 +206,9 @@ onMounted(async () => {
   if (eventStore.events.length < 1) {
     await eventStore.getEvents()
   }
-  event.value = eventStore.getEventById(Number(router.currentRoute.value.params.id))
+  event.value = eventStore.events.find(
+    (e) => e.eventId === Number(router.currentRoute.value.params.id)
+  )
   checkUserEvent()
   getIconName(userStore.user?.travelMethod)
 })
@@ -241,9 +243,12 @@ const getIconName = (medium: any) => {
   }
 }
 
-// const updateMileage = async () => {
-
-// }
+const updateEvent = async () => {
+  await eventStore.getEvent(event.value?.eventId as number)
+  event.value = eventStore.events.find(
+    (e) => e.eventId === Number(router.currentRoute.value.params.id)
+  )
+}
 // async function updateChallengeProgress(checkForCompletion: boolean) {
 //   const oldDistance = mileageStore.totalChallengeKmByUser
 //   await mileageStore.getChallengeMileage()
@@ -260,6 +265,4 @@ const getIconName = (medium: any) => {
 //     })
 //   }
 // }
-
-const copyInviteCode = () => {}
 </script>
