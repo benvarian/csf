@@ -54,6 +54,8 @@ def get_event(request, event_id):
             return Response(serializer.data)
         else:
             return Response("User is not authorised to view this event", status=403)
+    else:
+        return Response("User not authenticated", status=401)
 
 
 @api_view(["PUT"])
