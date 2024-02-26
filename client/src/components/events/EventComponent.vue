@@ -125,9 +125,7 @@
       </v-row>
       <v-row v-if="isDailyKmsVisible" class="mt-n4 mb-2">
         <v-col>
-          <!-- ! add in the data for the event -->
-          <p>data</p>
-          <!-- <MileageGraph :dataPoints="mileageStore.mileageByTeam" /> -->
+          <MileageGraph :dataPoints="mileageStore.mileageByEvent" />
         </v-col>
       </v-row>
     </v-container>
@@ -157,21 +155,21 @@
             </tr>
           </thead>
           <tbody>
-            <!-- <tr v-for="entry in teamData.leaderboard?.leaderboard" :key="entry.rank">
-                <td v-if="entry.rank < 4" class="text-right text-subtitle-1">
-                  <v-icon icon="mdi-trophy" size="25px" :class="getTrophyColour(entry.rank)" />
-                  <span>{{ entry.rank }}</span>
-                </td>
-                <td v-if="entry.rank > 3" class="text-right text-subtitle-1">
-                  <span>{{ entry.rank }}</span>
-                </td>
-                <td class="text-subtitle-1">
-                  <span>{{ entry.username }}</span>
-                </td>
-                <td class="text-right text-subtitle-1">
-                  {{ Math.round(entry.totalMileage * 100) / 100 }}
-                </td>
-              </tr> -->
+            <tr v-for="entry in eventLeaderboard.leaderboard?.leaderboard" :key="entry.rank">
+              <td v-if="entry.rank < 4" class="text-right text-subtitle-1">
+                <v-icon icon="mdi-trophy" size="25px" :class="getTrophyColour(entry.rank)" />
+                <span>{{ entry.rank }}</span>
+              </td>
+              <td v-if="entry.rank > 3" class="text-right text-subtitle-1">
+                <span>{{ entry.rank }}</span>
+              </td>
+              <td class="text-subtitle-1">
+                <span>{{ entry.username }}</span>
+              </td>
+              <td class="text-right text-subtitle-1">
+                {{ Math.round(entry.totalMileage * 100) / 100 }}
+              </td>
+            </tr>
           </tbody>
         </v-table>
       </div>
@@ -189,6 +187,8 @@ import type { Event } from '@/types/event'
 import router from '@/router'
 import { useDisplay } from 'vuetify'
 import MileageModal from '../MileageModal.vue'
+import MileageGraph from '../MileageGraph.vue'
+import type { UserLeaderboard } from '@/types/mileage'
 const { mobile } = useDisplay()
 
 const eventStore = useEventStore()
@@ -201,6 +201,10 @@ const method = ref()
 const mileageStore = useMileageStore()
 const dialog = ref(false)
 
+const eventLeaderboard = ref({
+  leaderboard: {} as UserLeaderboard | undefined
+})
+
 const event = ref<Event>()
 onMounted(async () => {
   if (eventStore.events.length < 1) {
@@ -209,6 +213,15 @@ onMounted(async () => {
   event.value = eventStore.events.find(
     (e) => e.eventId === Number(router.currentRoute.value.params.id)
   )
+  try {
+    await mileageStore.getMileageByEvent(event.value?.eventId as number)
+    eventLeaderboard.value.leaderboard = (await mileageStore.getLeaderboard({
+      type: 'event',
+      eventId: event.value?.eventId
+    })) as UserLeaderboard
+  } catch (error) {
+    console.log(error)
+  }
   checkUserEvent()
   getIconName(userStore.user?.travelMethod)
 })
@@ -243,26 +256,34 @@ const getIconName = (medium: any) => {
   }
 }
 
+const getTrophyColour = (rank: number) => {
+  switch (rank) {
+    case 1:
+      return 'text-yellow-darken-1'
+    case 2:
+      return 'text-blue-grey-lighten-1'
+    default:
+      return 'text-orange-darken-1'
+  }
+}
+
 const updateEvent = async () => {
   await eventStore.getEvent(event.value?.eventId as number)
   event.value = eventStore.events.find(
     (e) => e.eventId === Number(router.currentRoute.value.params.id)
   )
 }
-// async function updateChallengeProgress(checkForCompletion: boolean) {
-//   const oldDistance = mileageStore.totalChallengeKmByUser
-//   await mileageStore.getChallengeMileage()
-
-//   if (checkForCompletion) {
-//     challenges.value.forEach((challenge) => {
-//       if (
-//         oldDistance < challenge.length &&
-//         mileageStore.totalChallengeKmByUser >= challenge.length
-//       ) {
-//         challengeName.value = challenge.name
-//         isCompleted.value = true
-//       }
-//     })
-//   }
-// }
 </script>
+<style scoped>
+#placeColumn {
+  width: 80px;
+}
+
+#nameColumn {
+  width: auto;
+}
+
+#distanceColumn {
+  width: 33%;
+}
+</style>
