@@ -35,6 +35,19 @@
                   />
                 </v-col>
               </v-row>
+              <!-- event -->
+              <v-row v-if="userStore.user?.usersEvents">
+                <v-col>
+                  <v-select
+                    bg-color="white"
+                    class="rounded-t-sm"
+                    label="Event"
+                    :items="events"
+                    v-model="selectedEvent"
+                  ></v-select>
+                </v-col>
+              </v-row>
+              <!-- distance -->
               <v-row>
                 <v-col>
                   <p class="px-2 text-subtitle-2">Distance</p>
@@ -119,23 +132,40 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useMileageStore } from '@/stores/mileage'
+import { useEventStore } from '@/stores/event'
+import router from '@/router'
 
 const userStore = useUserStore()
 const mileageStore = useMileageStore()
+const eventStore = useEventStore()
 const loading = ref(false)
 const isFullscreen = ref(false)
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue', 'handleSubmit'])
+const selectedEvent = ref<String>('')
 
 const mileage = ref({ kilometres: '1', date: '' })
 
 const maxDate = ref('')
 const minDate = ref('')
-setMinAndMaxDate()
+// const router = router();
+const events = ref<String[]>([])
+const EventToUpdate = ref<Number>()
+
+onMounted(async () => {
+  try {
+    if (eventStore.events.length === 0) {
+      await eventStore.getEvents()
+    }
+  } catch (error) {
+    console.log(error)
+  }
+  fillEvents()
+  setMinAndMaxDate()
+})
 
 const form = ref(false)
 const required = (v: string) => {
@@ -151,17 +181,50 @@ const value = computed({
   }
 })
 
+const fixEvent = async () => {
+  if (selectedEvent.value !== '') {
+    const res = eventStore.events.find((event) => event.name === selectedEvent.value)
+    EventToUpdate.value = res?.eventId as number
+  }
+}
+
 const handleSubmit = async () => {
   loading.value = true
-  await mileageStore.addMileage({
-    user: userStore.user!.id,
-    kilometres: parseFloat(mileage.value.kilometres),
-    date: mileage.value.date
-  })
+  await fixEvent()
+  try {
+    await mileageStore.addMileage({
+      user: userStore.user!.id,
+      kilometres: parseFloat(mileage.value.kilometres),
+      date: mileage.value.date,
+      event: EventToUpdate.value as number
+    })
+  } catch (error) {
+    console.log(error)
+  }
   emit('update:modelValue', false)
   emit('handleSubmit')
   loading.value = false
 }
+
+const fillEvents = () => {
+  userStore.user?.usersEvents.forEach((eventId) => {
+    eventStore.events.forEach((event) => {
+      if (event.eventId === eventId) {
+        events.value.push(event.name)
+      }
+    })
+  })
+  // gets the current event and makes it the default option in the drop down
+  const res = eventStore.events.find(
+    (event) => event.eventId === Number(router.currentRoute.value.params.id)
+  )
+  selectedEvent.value = res?.name as string
+}
+
+// const updateMileageForEvent = () => {
+//   eventStore.events
+
+// }
 
 function setMinAndMaxDate() {
   let now = new Date()

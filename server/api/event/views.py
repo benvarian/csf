@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from django.db.models import Q
 
 from .models import Event
+from ..users.models import User
 from .serializers import EventSerialiser, CreateEventSerializer, EditEventSerializer
 
 
@@ -35,6 +36,26 @@ def get_events(request):
         events = Event.objects.filter(Q(is_public=True) & Q(is_archived=False))
         limited_serializer = EventSerialiser(events, many=True)
         return Response(limited_serializer.data)
+
+
+@api_view(["GET"])
+def get_event(request, event_id):
+    if request.user.is_authenticated is True:
+        try:
+            event = Event.objects.get(event_id=event_id)
+        except Event.DoesNotExist:
+            return Response("Event does not exist", status=404)
+        try:
+            user = User.objects.get(id=request.user.id)
+        except User.DoesNotExist:
+            return Response("User does not exist", status=404)
+        if event in list(user.users_events.all()):
+            serializer = EventSerialiser(event)
+            return Response(serializer.data)
+        else:
+            return Response("User is not authorised to view this event", status=403)
+    else:
+        return Response("User not authenticated", status=401)
 
 
 @api_view(["PUT"])

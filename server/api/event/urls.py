@@ -8,4 +8,5 @@ urlpatterns = [
     path("get/", views.get_events, name="get-events"),
     path("update/<int:event_id>", views.update_event, name="update-event"),
     path("delete/<int:event_id>", views.delete_event, name="delete-event"),
+    path("get/<int:event_id>", views.get_event, name="get-event"),
 ]
