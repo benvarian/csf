@@ -47,8 +47,8 @@ def on_delete(sender, instance, **kwargs):
         event = Event.objects.get(event_id=instance.event.event_id)
         event.total_mileage -= instance.kilometres
         event.save()
-    instance.user.total_mileage -= instance.kilometres
-    instance.user.save()
     if instance.user.team_id:
         instance.user.team_id.total_mileage -= instance.kilometres
         instance.user.team_id.save()
+    instance.user.total_mileage -= instance.kilometres
+    instance.user.save()
