@@ -10,7 +10,9 @@ export const useEventStore = defineStore('event', {
     events: <Event[]>[]
   }),
   actions: {
-    async createEvent(partialEvent: Omit<Event, 'eventId' | 'isArchived' | 'teamId' | 'totalMileage'>) {
+    async createEvent(
+      partialEvent: Omit<Event, 'eventId' | 'isArchived' | 'teamId' | 'totalMileage'>
+    ) {
       const userStore = useUserStore()
       const modifiedData = snakify({
         ...partialEvent,
