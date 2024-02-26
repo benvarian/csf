@@ -15,38 +15,25 @@
           <v-row align="center">
             <v-col align="center">
               <v-card-title class="mx-auto text-h5 justify-center">Add Mileage</v-card-title>
-              <v-card-subtitle class="mx-auto justify-center"
-                >Let us know how far you travelled today!</v-card-subtitle
-              >
+              <v-card-subtitle class="mx-auto justify-center">Let us know how far you travelled today!</v-card-subtitle>
             </v-col>
           </v-row>
           <v-row>
             <v-card-text>
               <v-row>
                 <v-col>
-                  <v-text-field
-                    type="date"
-                    label="Date"
-                    v-model="mileage.date"
-                    bg-color="white"
-                    :max="maxDate"
-                    :min="minDate"
-                    :rules="[required]"
-                  />
+                  <v-text-field type="date" label="Date" v-model="mileage.date" bg-color="white" :max="maxDate"
+                    :min="minDate" :rules="[required]" />
                 </v-col>
               </v-row>
-              <!-- gap -->
+              <!-- event -->
               <v-row v-if="userStore.user?.usersEvents">
                 <v-col>
-                  <v-select
-                    bg-color="white"
-                    class="rounded-t-sm"
-                    label="Event"
-                    :items="events"
-                    v-model="selectedEvent"
-                  ></v-select>
+                  <v-select bg-color="white" class="rounded-t-sm" label="Event" :items="events"
+                    v-model="selectedEvent"></v-select>
                 </v-col>
               </v-row>
+              <!-- distance -->
               <v-row>
                 <v-col>
                   <p class="px-2 text-subtitle-2">Distance</p>
@@ -54,50 +41,17 @@
               </v-row>
               <v-row>
                 <v-col>
-                  <div
-                    v-if="userStore.user!.travelMethod === 'RUNNING'"
-                    class="ma-0 pa-0"
-                    id="runner"
-                  >
-                    <v-slider
-                      v-model="mileage.kilometres"
-                      color="secondaryGreen"
-                      :thumb-size="40"
-                      elevation="0"
-                      :step="0.1"
-                      min="0.1"
-                      max="50"
-                    />
+                  <div v-if="userStore.user!.travelMethod === 'RUNNING'" class="ma-0 pa-0" id="runner">
+                    <v-slider v-model="mileage.kilometres" color="secondaryGreen" :thumb-size="40" elevation="0"
+                      :step="0.1" min="0.1" max="50" />
                   </div>
-                  <div
-                    v-if="userStore.user!.travelMethod === 'WALKING'"
-                    id="walker"
-                    class="ma-0 pa-0"
-                  >
-                    <v-slider
-                      v-model="mileage.kilometres"
-                      color="green"
-                      :thumb-size="40"
-                      elevation="0"
-                      :step="0.1"
-                      min="0.1"
-                      max="50"
-                    />
+                  <div v-if="userStore.user!.travelMethod === 'WALKING'" id="walker" class="ma-0 pa-0">
+                    <v-slider v-model="mileage.kilometres" color="green" :thumb-size="40" elevation="0" :step="0.1"
+                      min="0.1" max="50" />
                   </div>
-                  <div
-                    v-if="userStore.user!.travelMethod === 'WHEELING'"
-                    id="wheeler"
-                    class="ma-0 pa-0"
-                  >
-                    <v-slider
-                      v-model="mileage.kilometres"
-                      color="green"
-                      :thumb-size="40"
-                      elevation="0"
-                      :step="0.1"
-                      min="0.1"
-                      max="50"
-                    />
+                  <div v-if="userStore.user!.travelMethod === 'WHEELING'" id="wheeler" class="ma-0 pa-0">
+                    <v-slider v-model="mileage.kilometres" color="green" :thumb-size="40" elevation="0" :step="0.1"
+                      min="0.1" max="50" />
                   </div>
                 </v-col>
               </v-row>
@@ -114,12 +68,7 @@
         </v-container>
         <v-card-actions class="d-flex justify-center">
           <v-btn @click="handleSubmit" :disabled="!form" color="primaryRed" variant="elevated">
-            <v-progress-circular
-              v-if="loading"
-              indeterminate
-              size="24"
-              color="white"
-            ></v-progress-circular>
+            <v-progress-circular v-if="loading" indeterminate size="24" color="white"></v-progress-circular>
             <span v-else>ADD</span>
           </v-btn>
         </v-card-actions>
@@ -135,6 +84,7 @@ import { computed, ref, watchEffect, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useMileageStore } from '@/stores/mileage'
 import { useEventStore } from '@/stores/event'
+import router from '@/router'
 
 const userStore = useUserStore()
 const mileageStore = useMileageStore()
@@ -149,7 +99,7 @@ const mileage = ref({ kilometres: '1', date: '' })
 
 const maxDate = ref('')
 const minDate = ref('')
-
+// const router = router();
 const events = ref<String[]>([])
 const EventToUpdate = ref<Number>()
 
@@ -199,7 +149,6 @@ const handleSubmit = async () => {
   } catch (error) {
     console.log(error)
   }
-  // updateMileageForEvent();
   emit('update:modelValue', false)
   emit('handleSubmit')
   loading.value = false
@@ -213,6 +162,9 @@ const fillEvents = () => {
       }
     })
   })
+  // gets the current event and makes it the default option in the drop down
+  const res = eventStore.events.find((event) => event.eventId === Number(router.currentRoute.value.params.id));
+  selectedEvent.value = res?.name as string;
 }
 
 // const updateMileageForEvent = () => {
