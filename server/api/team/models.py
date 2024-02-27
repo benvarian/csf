@@ -8,6 +8,7 @@ class Team(models.Model):
     join_code = models.CharField(unique=True, default=None)
     bio = models.TextField(default="")
     total_mileage = models.FloatField(default=0.0, null=True, blank=True)
+    users_events = models.TextField(default="")
 
     def __str__(self):
         return f"{self.name} - {self.join_code}"

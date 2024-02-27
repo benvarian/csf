@@ -40,6 +40,8 @@ export const useTeamStore = defineStore('team', () => {
     async getTeam(teamId: Number) {
       const res = await server.get(`team/get/${teamId}/`)
       if (res.status == 200) team.value = camelize<Team>(res.data)
+      console.log(team.value);
+      
     },
 
     async createTeam(data: Omit<Team, 'teamId' | 'joinCode'>) {
