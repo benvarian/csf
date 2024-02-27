@@ -222,8 +222,6 @@ onMounted(async () => {
   } catch (error) {
     console.log(error)
   }
-  console.log(eventLeaderboard.value.leaderboard)
-
   checkUserEvent()
   getIconName(userStore.user?.travelMethod)
 })
