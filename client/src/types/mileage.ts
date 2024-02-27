@@ -7,9 +7,10 @@ export default interface Mileage {
 }
 
 export interface GetLeaderboardParam {
-  type: 'users' | 'teams' | 'team'
+  type: 'users' | 'teams' | 'team' | 'event'
   userId?: number
   teamId?: number
+  eventId?: number
 }
 
 export interface UserLeaderboard {

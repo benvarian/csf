@@ -6,18 +6,22 @@ import camelize from 'camelize-ts'
 import snakify from 'snakify-ts'
 import { notify } from '@kyvg/vue3-notification'
 import { useUserStore } from './user'
+import { useEventStore } from './event'
 
 export const useMileageStore = defineStore('mileage', {
   state: () => ({
     byUser: { mileage: [] as Mileage[], totalKm: 0 },
     byTeam: { mileage: [] as Mileage[], totalKm: 0 },
+    byEvent: { mileage: [] as Mileage[], totalKm: 0 },
     totalChallengeKmByUser: 0
   }),
   getters: {
     mileageByUser: (state) => state.byUser.mileage,
     mileageByTeam: (state) => state.byTeam.mileage,
     totalKmByUser: (state) => state.byUser.totalKm,
-    totalKmByTeam: (state) => state.byTeam.totalKm
+    totalKmByTeam: (state) => state.byTeam.totalKm,
+    mileageByEvent: (state) => state.byEvent.mileage,
+    totalKmByEvent: (state) => state.byEvent.totalKm
   },
   actions: {
     async addMileage(mileage: Omit<Mileage, 'mileageId'>) {
@@ -67,12 +71,18 @@ export const useMileageStore = defineStore('mileage', {
         if (res.status == 200) this.byTeam.totalKm = res.data
       }
     },
+    async getMileageByEvent(id: number) {
+      const event = useEventStore().events.find((e) => e.eventId == id)?.eventId
+      let res = await server.get(`mileage/get_mileage`, { params: { event } })
+      if (res.status == 200) this.byEvent.mileage = camelize(res.data) as Mileage[]
+      res = await server.get(`mileage/get_mileage`, { params: { sum: true, event } })
+      if (res.status == 200) this.byEvent.totalKm = res.data
+    },
     async getChallengeMileage() {
       const res = await server.get(`mileage/get_mileage`, {
         params: { challenge: true, user: useUserStore().user!.id }
       })
       if (res.status == 200) this.totalChallengeKmByUser = res.data
-    },
-    async getMileageByEvent() {}
+    }
   }
 })

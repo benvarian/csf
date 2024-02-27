@@ -6,12 +6,13 @@ from rest_framework import status
 from .models import Mileage
 from ..users.models import User
 from ..team.models import Team
+from ..event.models import Event
 from .serializers import (
     MileageSerializer,
     UserSerializer,
     UserLeaderboardSerializer,
     TeamLeaderboardSerializer,
-)  # , PostMileageSerializer
+)
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Sum
 
@@ -41,6 +42,14 @@ def get_mileage(request: HttpRequest):
             except ObjectDoesNotExist:
                 return Response(
                     request.user.team_id.name, status=status.HTTP_400_BAD_REQUEST
+                )
+        if "event" in request.GET:
+            try:
+                event = Event.objects.get(event_id=request.GET["event"])
+                return Response(event.total_mileage)
+            except ObjectDoesNotExist:
+                return Response(
+                    request.GET["event"], status=status.HTTP_400_BAD_REQUEST
                 )
     if "challenge" in request.GET and "user" in request.GET:
         user = User.objects.get(id=request.GET["user"])
@@ -72,6 +81,9 @@ def get_mileage(request: HttpRequest):
         return Response(MileageSerializer(mileage, many=True).data)
     if "team" in request.GET:
         mileage = Mileage.objects.filter(team__in=request.GET.getlist("team"))
+        return Response(MileageSerializer(mileage, many=True).data)
+    if "event" in request.GET:
+        mileage = Mileage.objects.filter(event__in=request.GET.getlist("event"))
         return Response(MileageSerializer(mileage, many=True).data)
     return Response("Invalid parameters", status=status.HTTP_400_BAD_REQUEST)
 
@@ -131,7 +143,7 @@ def get_leaderboard(request):
             User.objects.filter(
                 is_staff=False, team_id=request.GET.get("team_id")
             ).order_by("-total_mileage"),
-            many=True
+            many=True,
         )
         result = {
             "leaderboard": calculate_leaderboard_ranks(
@@ -145,6 +157,48 @@ def get_leaderboard(request):
             if rank != -1 and user_mileage != -1:
                 result["user"] = {
                     "username": leaderboard_serializer.data[index]["username"],
+                    "rank": rank,
+                    "total_mileage": user_mileage,
+                    "team_id": User.objects.get(
+                        id=request.GET["user_id"]
+                    ).team_id.team_id,
+                }
+    elif request.GET["type"] == "event":
+        leaderboard_serializer = UserLeaderboardSerializer(
+            User.objects.filter(
+                is_staff=False, users_events__event_id=request.GET.get("event_id")
+            ).order_by("-total_mileage"),
+            many=True,
+        )
+        data = []
+        for user in leaderboard_serializer.data:
+            user_dict = {key: value for key, value in user.items()}
+            user = User(id=user_dict["id"])
+            mileages = MileageSerializer(
+                Mileage.objects.filter(user=user, event=request.GET.get("event_id")),
+                many=True,
+            )
+            user_mileage = []
+            for mileage in mileages.data:
+                user_mileage.append({key: value for key, value in mileage.items()})
+            # use this value to modify the one that is returned to us by total mileage as this one
+            # allows us to reference the evnet and not all of the users mileage
+            total = 0
+            for mileage in user_mileage:
+                total += float(mileage["kilometres"])
+            user_dict["total_mileage"] = round(total, 2)
+            data.append(user_dict)
+
+        result = {
+            "leaderboard": calculate_leaderboard_ranks(data[:LEADERBOARD_SIZE], "id")
+        }
+        if "user_id" in request.GET:
+            rank, user_mileage, index = get_rank_and_mileage_from_leaderboard(
+                data, int(request.GET["user_id"]), "id"
+            )
+            if rank != -1 and user_mileage != -1:
+                result["user"] = {
+                    "username": data[index]["username"],
                     "rank": rank,
                     "total_mileage": user_mileage,
                     "team_id": User.objects.get(
