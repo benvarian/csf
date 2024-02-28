@@ -112,7 +112,7 @@
       <!-- Daily Kilometres -->
       <v-container class="pa-0">
         <v-row align="start" id="pointer-cursor" class="my-2">
-          <v-col>
+          <v-col @click="isDailyKmsVisible = !isDailyKmsVisible">
             <h2>Daily KMs</h2>
           </v-col>
           <v-icon
