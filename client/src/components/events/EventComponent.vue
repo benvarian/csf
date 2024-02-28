@@ -2,7 +2,7 @@
   <v-container>
     <v-row class="mx-6" :fullscreen="mobile">
       <v-row align="center" class="my-2 px-5">
-        <v-col align="center">
+        <v-col align="center" class="">
           <h1>{{ event?.name }}</h1>
         </v-col>
       </v-row>
@@ -174,6 +174,8 @@
       </div>
     </v-container>
     <v-divider />
+    <!-- <EventsModal v-if="isEditingEvent" :type="'Edit'" :event="editingEvent" @close="closeModal"
+      v-model="isEditingEvent" /> -->
   </v-container>
 </template>
 
@@ -188,8 +190,9 @@ import { useDisplay } from 'vuetify'
 import MileageModal from '../MileageModal.vue'
 import MileageGraph from '../MileageGraph.vue'
 import type { UserLeaderboard } from '@/types/mileage'
-const { mobile } = useDisplay()
+// import EventsModal from '../../components/EventCard.vue'
 
+const { mobile } = useDisplay()
 const eventStore = useEventStore()
 const userStore = useUserStore()
 const isDescVisible = ref(true)
@@ -199,12 +202,13 @@ const isUserSignedUp = ref(false)
 const method = ref()
 const mileageStore = useMileageStore()
 const dialog = ref(false)
-
 const eventLeaderboard = ref({
   leaderboard: {} as UserLeaderboard | undefined
 })
-
 const event = ref<Event>()
+// const isEditingEvent = ref<boolean>(false)
+// const editingEvent = ref<Event>(<Event>{})
+
 onMounted(async () => {
   if (eventStore.events.length < 1) {
     await eventStore.getEvents()
@@ -255,6 +259,21 @@ const getIconName = (medium: any) => {
   }
 }
 
+// const closeModal = () => {
+//   // isAddingEvent.value = false
+//   isEditingEvent.value = false
+// }
+// // ! add in edit feautre
+// function openEditModal(id: number) {
+//   let foundEvent = eventStore.events.find((e) => e.eventId === id)
+//   console.log(foundEvent);
+
+//   if (foundEvent) {
+//     editingEvent.value = foundEvent
+//     isEditingEvent.value = true
+//   }
+// }
+
 const getTrophyColour = (rank: number) => {
   switch (rank) {
     case 1:
@@ -285,6 +304,7 @@ const updateEvent = async () => {
 #distanceColumn {
   width: 33%;
 }
+
 #pointer-cursor {
   cursor: pointer;
 }
