@@ -45,16 +45,40 @@
       </v-row>
       <v-divider />
 
-      <!-- ! find somewhere to put this tomrrow and write tests and we are done -->
-      <v-row align="center" class="my-2">
-        <v-col class="d-flex flex-wrap">
-          <div v-for="(item, index) in teamData.users_events" :key="index">
-            <div class="rounded-pill bg-green px-3 py-1 mx-2">
-              <span class="text-white">{{ item }}</span>
-            </div>
-          </div>
-        </v-col>
-      </v-row>
+      <!-- User Events -->
+      <v-container class="pa-0">
+        <v-row id="pointer-cursor" class="my-2">
+          <v-col class="" @click="isEventsVisible = !isEventsVisible">
+            <h2>Users Events</h2>
+          </v-col>
+          <v-icon
+            v-if="isEventsVisible"
+            icon="mdi mdi-chevron-down"
+            @click="isEventsVisible = !isEventsVisible"
+            class="px-10"
+            size="50px"
+          />
+          <v-icon
+            v-else
+            icon="mdi mdi-chevron-right"
+            @click="isEventsVisible = !isEventsVisible"
+            class="px-10"
+            size="50px"
+          />
+        </v-row>
+        <v-row v-if="isEventsVisible" class="mt-n4 mb-2">
+          <v-col class="d-flex flex-wrap">
+            <v-row class="py-2 pl-2">
+              <div v-for="(item, index) in teamData.users_events" :key="index">
+                <div class="rounded-pill bg-green px-3 py-0.5 mx-2">
+                  <span class="text-white">{{ item }}</span>
+                </div>
+              </div>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-container>
+      <v-divider />
 
       <!-- Bio -->
       <v-container class="pa-0">
@@ -312,6 +336,7 @@ const isBioVisible = ref(false)
 const isDailyKmsVisible = ref(true)
 const isSubTeamsVisible = ref(false)
 const isLeaderboardVisible = ref(false)
+const isEventsVisible = ref(true)
 
 const copyHoverText = ref('Copy to Clipboard')
 
