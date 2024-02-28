@@ -9,7 +9,6 @@
     </v-row>
 
     <v-divider />
-    <!-- change the mileageStore thing to the events mileage -->
     <v-row class="ma-0 px-4 pb-0 pt-0" align="center">
       <v-col>
         <v-card variant="flat" class="pb-1">
@@ -45,7 +44,7 @@
 
     <v-divider />
 
-    <!-- Invite Code -->
+    <!-- Signup -->
     <v-row align="center" class="my-2">
       <v-col>
         <h2 v-if="!isUserSignedUp">Sign Up</h2>
@@ -285,5 +284,8 @@ const updateEvent = async () => {
 
 #distanceColumn {
   width: 33%;
+}
+#pointer-cursor {
+  cursor: pointer;
 }
 </style>
