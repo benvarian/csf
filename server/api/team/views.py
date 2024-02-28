@@ -4,6 +4,7 @@ from .models import Team
 from ..users.models import User
 from ..event.models import Event
 from .serializers import TeamSerialiser
+from django.core.exceptions import ObjectDoesNotExist
 
 from django.http import HttpResponse
 
@@ -30,7 +31,10 @@ def get_team(request, team_id):
             new_event = Event.objects.get(name=event)
             if new_event.name not in users_events:
                 users_events.append(new_event.name)
-    team = Team.objects.get(team_id=team_id)
+    try:
+        team = Team.objects.get(team_id=team_id)
+    except ObjectDoesNotExist:
+        return Response("Team does not exist", status=500)
     team.users_events = users_events
     serializer = TeamSerialiser(team)
     return Response(serializer.data, status=200)
