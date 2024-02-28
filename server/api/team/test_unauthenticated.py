@@ -12,31 +12,37 @@ class teamnoAuthTests(APITestCase):
         )
 
     def test_create_team(self):
-        data = {'name': "ben", 'join_code': None, 'bio': None}
-        response = self.client.post(reverse('team:create-team'), data, format='json')
+        data = {"name": "ben", "join_code": None, "bio": None}
+        response = self.client.post(reverse("team:create-team"), data, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_update_team(self):
         teamBeforeUpdate = Team.objects.get(team_id=self.team.team_id)
         response = self.client.put(
-            reverse(
-                "team:update-team",
-                kwargs={"team_id": teamBeforeUpdate.team_id}
-            ),
-            {"name": "team1Updated", "join_code": "team1Updated", "bio": "team1Updated"},
-            format='json'
+            reverse("team:update-team", kwargs={"team_id": teamBeforeUpdate.team_id}),
+            {
+                "name": "team1Updated",
+                "join_code": "team1Updated",
+                "bio": "team1Updated",
+            },
+            format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_delete_team(self):
         teamCountBeforeDelete = Team.objects.all().count()
         response = self.client.delete(
-            reverse(
-                "team:delete-team",
-                kwargs={"team_id": self.team.team_id}
-            ),
-            format='json'
+            reverse("team:delete-team", kwargs={"team_id": self.team.team_id}),
+            format="json",
         )
         teamCountAfterDelete = Team.objects.all().count()
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(teamCountBeforeDelete, teamCountAfterDelete)
+
+    def test_get_team(self):
+        response = self.client.get(
+            reverse("team:get-team", kwargs={"team_id": self.team.team_id}),
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], self.team.name)
