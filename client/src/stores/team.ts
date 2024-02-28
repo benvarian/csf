@@ -39,10 +39,15 @@ export const useTeamStore = defineStore('team', () => {
 
     async getTeam(teamId: Number) {
       const res = await server.get(`team/get/${teamId}/`)
-      if (res.status == 200) team.value = camelize<Team>(res.data)
+      if (res.status == 200) {
+        team.value = camelize<Team>(res.data)
+        let temp = team.value.usersEvents.toString()
+        temp = temp.replace(/"/g, '').replace(/'/g, '"')
+        team.value.usersEvents = JSON.parse(temp)
+      }
     },
 
-    async createTeam(data: Omit<Team, 'teamId' | 'joinCode'>) {
+    async createTeam(data: Omit<Team, 'teamId' | 'joinCode' | 'usersEvents'>) {
       const res = await server.post('team/create/', snakify(data))
       if (res.status == 200) {
         team.value = camelize<Team>(res.data)
