@@ -47,7 +47,7 @@ export const useTeamStore = defineStore('team', () => {
       }
     },
 
-    async createTeam(data: Omit<Team, 'teamId' | 'joinCode'>) {
+    async createTeam(data: Omit<Team, 'teamId' | 'joinCode' | 'usersEvents'>) {
       const res = await server.post('team/create/', snakify(data))
       if (res.status == 200) {
         team.value = camelize<Team>(res.data)
