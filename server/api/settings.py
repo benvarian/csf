@@ -201,5 +201,6 @@ EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_USE_TLS = os.environ.get("APP_ENV") == "True"
 
 # backing up
+# refer to bottom of README.md for instructions
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': './backups'}

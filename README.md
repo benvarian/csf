@@ -43,3 +43,12 @@ The documentation can be viewed on
 ```
 http://localhost:8000/
 ```
+
+### Run Backups for the Databse 
+```python
+python manage.py dbbackup
+``` 
+### Apply backup
+```python
+python manage.py dbrestore
+```
