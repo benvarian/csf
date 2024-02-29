@@ -7,6 +7,7 @@
         max-height="16"
         alt="red background"
         cover
+        
       />
       <v-card-actions>
         <v-spacer />
