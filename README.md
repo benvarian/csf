@@ -43,3 +43,6 @@ The documentation can be viewed on
 ```
 http://localhost:8000/
 ```
+
+## Project Maintainers
+Since completion of this project in the winter period of 2023, the project is been handled by Ben Varian for the Community Spirit Foundation.
