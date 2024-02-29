@@ -19,7 +19,7 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
+          username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # Server Docker image
@@ -29,7 +29,7 @@ jobs:
           context: .
           file: ./docker/server/Dockerfile
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME}}/csf-prod-server:${{ steps.date.outputs.date }}, ${{ vars.DOCKERHUB_USERNAME }}/csf-prod-server:latest
+          tags: ${{ vars.DOCKER_USERNAME}}/csf-prod-server:${{ steps.date.outputs.date }}, ${{ vars.DOCKER_USERNAME }}/csf-prod-server:latest
 
   frontend:
     runs-on: ubuntu-latest
@@ -44,7 +44,7 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}
+          username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # Client Docker image
@@ -54,4 +54,4 @@ jobs:
           context: .
           file: ./docker/client/Dockerfile
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME}}/csf-prod-client:${{ steps.date.outputs.date }}, ${{ vars.DOCKERHUB_USERNAME }}/csf-prod-client:latest
+          tags: ${{ vars.DOCKER_USERNAME }}/csf-prod-client:${{ steps.date.outputs.date }}, ${{ vars.DOCKER_USERNAME }}/csf-prod-client:latest
