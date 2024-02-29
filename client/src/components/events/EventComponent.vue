@@ -188,8 +188,8 @@ import { useDisplay } from 'vuetify'
 import MileageModal from '../MileageModal.vue'
 import MileageGraph from '../MileageGraph.vue'
 import type { UserLeaderboard } from '@/types/mileage'
-const { mobile } = useDisplay()
 
+const { mobile } = useDisplay()
 const eventStore = useEventStore()
 const userStore = useUserStore()
 const isDescVisible = ref(true)
@@ -199,12 +199,11 @@ const isUserSignedUp = ref(false)
 const method = ref()
 const mileageStore = useMileageStore()
 const dialog = ref(false)
-
 const eventLeaderboard = ref({
   leaderboard: {} as UserLeaderboard | undefined
 })
-
 const event = ref<Event>()
+
 onMounted(async () => {
   if (eventStore.events.length < 1) {
     await eventStore.getEvents()
@@ -285,6 +284,7 @@ const updateEvent = async () => {
 #distanceColumn {
   width: 33%;
 }
+
 #pointer-cursor {
   cursor: pointer;
 }
