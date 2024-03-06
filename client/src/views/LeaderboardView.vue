@@ -258,7 +258,7 @@ onMounted(async () => {
 })
 
 const getTeamName = (teamId: number) => {
-  return teams.value.find((team: Team) => team.teamId === teamId).name
+  return teams.value.find((team: Team) => team.teamId === teamId)?.name
 }
 
 const findTeams = async (data: RankedUserLeaderboardEntry[]) => {
