@@ -190,8 +190,8 @@ const teams = ref()
 const isLoading = ref(true)
 const teamSorted = ref(false)
 const mileageSorted = ref(false)
-const teamList = ref<Number[]>([])
-const topTeam = ref(0)
+const teamList = ref<number[]>([])
+const iterator = ref<number>(0)
 
 const filteredUserLeaderboard = computed<RankedUserLeaderboardEntry[]>(() =>
   userLeaderboard.value.filter((user) =>
@@ -253,7 +253,7 @@ onMounted(async () => {
     currentTeam.value = teamsResult.team
   }
   teams.value = (await teamStore.getTeams()) as Team[]
-  await findTeams(filteredUserLeaderboard.value)
+  await findTeams(userLeaderboard.value)
   isLoading.value = false
 })
 
@@ -269,41 +269,21 @@ const findTeams = async (data: RankedUserLeaderboardEntry[]) => {
   })
   teamList.value.sort()
 }
-const fixTeamBlanks = (data: RankedUserLeaderboardEntry[]) => {
-  const handler = {}
-  const fixedData = data.map((x) => {
-    if (x.teamId === null) {
-      return new Proxy({ ...x, teamId: teamList.value.length }, handler)
-    }
-    return x
-  })
-  return fixedData
-}
 const sortTeam = (data: RankedUserLeaderboardEntry[]) => {
-  data = fixTeamBlanks(data)
-  if (topTeam.value === 0) topTeam.value = 1
-
-  if (topTeam.value === teamList.value.length + 1) {
-    topTeam.value = 1
-  }
-  // if the team with index 1 is at the top, then we need to increment the topTeam value by 1
-  if (data[0].teamId === topTeam.value) {
-    topTeam.value = 1 + topTeam.value
-  }
+  if (iterator.value === teamList.value.length) iterator.value = 0
   let items = <RankedUserLeaderboardEntry[]>[]
   data.forEach((element) => {
-    if (element.teamId !== topTeam.value) {
+    if (element.teamId !== teamList.value[iterator.value]) {
       items.push(element)
     }
   })
-
   for (let i = 0; i < items.length; i++) {
     const index = data.indexOf(items[i])
     data.splice(index, 1)
   }
   data.push(...items)
   userLeaderboard.value = [...data]
-  topTeam.value = 1 + topTeam.value
+  iterator.value = iterator.value + 1
 }
 
 const sortMileage = (data: RankedUserLeaderboardEntry[]) => {
