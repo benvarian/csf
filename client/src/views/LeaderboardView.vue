@@ -269,8 +269,17 @@ const findTeams = async (data: RankedUserLeaderboardEntry[]) => {
   })
   teamList.value.sort()
 }
-
+const fixTeamBlanks = (data: RankedUserLeaderboardEntry[]) => {
+  const fixedData = data.map((x) => {
+    if (x.teamId === null) {
+      return { ...x, teamId: teamList.value.length }
+    }
+    return x
+  })
+  return fixedData
+}
 const sortTeam = (data: RankedUserLeaderboardEntry[]) => {
+  data = fixTeamBlanks(data)
   if (topTeam.value === 0) topTeam.value = 1
 
   if (topTeam.value === teamList.value.length + 1) {
