@@ -279,7 +279,6 @@ const fixTeamBlanks = (data: RankedUserLeaderboardEntry[]) => {
   return fixedData
 }
 const sortTeam = (data: RankedUserLeaderboardEntry[]) => {
-  console.log('sorted')
   data = fixTeamBlanks(data)
   if (topTeam.value === 0) topTeam.value = 1
 
@@ -304,6 +303,7 @@ const sortTeam = (data: RankedUserLeaderboardEntry[]) => {
   data.push(...items)
   userLeaderboard.value = [...data]
   topTeam.value = 1 + topTeam.value
+  console.log('sorted', data)
 }
 
 const sortMileage = (data: RankedUserLeaderboardEntry[]) => {
