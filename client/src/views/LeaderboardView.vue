@@ -270,9 +270,10 @@ const findTeams = async (data: RankedUserLeaderboardEntry[]) => {
   teamList.value.sort()
 }
 const fixTeamBlanks = (data: RankedUserLeaderboardEntry[]) => {
+  const handler = {}
   const fixedData = data.map((x) => {
     if (x.teamId === null) {
-      return { ...x, teamId: teamList.value.length }
+      return new Proxy({ ...x, teamId: teamList.value.length }, handler)
     }
     return x
   })
@@ -303,7 +304,6 @@ const sortTeam = (data: RankedUserLeaderboardEntry[]) => {
   data.push(...items)
   userLeaderboard.value = [...data]
   topTeam.value = 1 + topTeam.value
-  console.log('sorted', data)
 }
 
 const sortMileage = (data: RankedUserLeaderboardEntry[]) => {
