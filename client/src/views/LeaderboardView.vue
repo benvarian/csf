@@ -279,6 +279,7 @@ const fixTeamBlanks = (data: RankedUserLeaderboardEntry[]) => {
   return fixedData
 }
 const sortTeam = (data: RankedUserLeaderboardEntry[]) => {
+  console.log('sorted')
   data = fixTeamBlanks(data)
   if (topTeam.value === 0) topTeam.value = 1
 
