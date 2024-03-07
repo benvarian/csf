@@ -126,6 +126,7 @@ def get_leaderboard(request):
             )
         }
         if "user_id" in request.GET or "user_id" in request.data:
+            user_id = request.GET.get("user_id") or request.data.get("user_id")
             rank, user_mileage, index = get_rank_and_mileage_from_leaderboard(
                 leaderboard_serializer.data, int(request.GET.get("user_id")), "id"
             )
@@ -134,9 +135,7 @@ def get_leaderboard(request):
                     "username": leaderboard_serializer.data[index]["username"],
                     "rank": rank,
                     "total_mileage": user_mileage,
-                    "team_id": User.objects.get(
-                        id=request.GET.get("user_id")
-                    ).team_id.team_id,
+                    "team_id": User.objects.get(id=user_id).team_id.team_id,
                 }
     elif request.data.get("type") == "team" or request.GET.get("type") == "team":
         leaderboard_serializer = UserLeaderboardSerializer(
