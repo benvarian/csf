@@ -163,7 +163,7 @@
                 <span>{{ entry.rank }}</span>
               </td>
               <td class="text-subtitle-1">
-                <span>{{ entry.username }}</span>
+                <span>{{ entry.name }}</span>
               </td>
               <td class="text-right text-subtitle-1">
                 {{ Math.round(entry.totalMileage * 100) / 100 }}
@@ -187,7 +187,7 @@ import router from '@/router'
 import { useDisplay } from 'vuetify'
 import MileageModal from '../MileageModal.vue'
 import MileageGraph from '../MileageGraph.vue'
-import type { UserLeaderboard } from '@/types/mileage'
+import type { TeamLeaderboard } from '@/types/mileage'
 
 const { mobile } = useDisplay()
 const eventStore = useEventStore()
@@ -200,7 +200,7 @@ const method = ref()
 const mileageStore = useMileageStore()
 const dialog = ref(false)
 const eventLeaderboard = ref({
-  leaderboard: {} as UserLeaderboard | undefined
+  leaderboard: {} as TeamLeaderboard | undefined
 })
 const event = ref<Event>()
 
@@ -216,7 +216,7 @@ onMounted(async () => {
     eventLeaderboard.value.leaderboard = (await mileageStore.getLeaderboard({
       type: 'event',
       eventId: event.value?.eventId
-    })) as UserLeaderboard
+    })) as TeamLeaderboard
   } catch (error) {
     console.log(error)
   }
