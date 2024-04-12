@@ -44,10 +44,11 @@ export const useTeamStore = defineStore('team', () => {
         team.value = camelize<Team>(res.data)
         let temp = team.value.usersEvents.toString()
         temp = temp.replace(/\[|\]/g, '').replace(/\\/g, '').replace(/"/g, '')
-        temp.split(',').map((x) => {
+        const event = temp.split(',')
+        event.forEach((x) => {
           x = x.trim()
           if (x.charAt(0) == "'" && x.charAt(x.length - 1) == "'") {
-            x = x.substring(1, x.length - 2)
+            x = x.substring(1, x.length - 1)
             events.push(x)
           } else {
             events.push(x)
