@@ -3,5 +3,5 @@ export interface Team {
   name: string
   joinCode: string
   bio: string
-  usersEvents: []
+  usersEvents: string[]
 }
