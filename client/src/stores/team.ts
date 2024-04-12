@@ -40,16 +40,16 @@ export const useTeamStore = defineStore('team', () => {
     async getTeam(teamId: Number) {
       const res = await server.get(`team/get/${teamId}/`)
       if (res.status == 200) {
-        const events:string[] = [];
+        const events: string[] = []
         team.value = camelize<Team>(res.data)
         let temp = team.value.usersEvents.toString()
-        temp = temp.replace(/\[|\]/g, '').replace(/\\/g, '').replace(/"/g, '');
+        temp = temp.replace(/\[|\]/g, '').replace(/\\/g, '').replace(/"/g, '')
         temp.split(',').map((x) => {
           x = x.trim()
-          if (x.charAt(0) == '\'' && x.charAt(x.length-1) == '\'') {
+          if (x.charAt(0) == "'" && x.charAt(x.length - 1) == "'") {
             x = x.substring(1, x.length - 2)
             events.push(x)
-          } else{ 
+          } else {
             events.push(x)
           }
         })
